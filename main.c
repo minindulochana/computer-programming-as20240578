@@ -14,7 +14,9 @@ void cityManagement(char city[][SIZE], int *citycount);
 int distance(int dist[][CITIES], int cityCount, int a, int b, int km);
 void inputDistance(int dist[][CITIES], char cities[][SIZE], int cityCount);
 void displayDistanceTable(int dist[][CITIES], char cities[][SIZE], int cityCount);
-void showVehicleTypes();
+void displayVehicleTypes();
+void handleDeliveryRequest(int dist[][CITIES], char cities[][SIZE], int cityCount,
+                           int capacity[]);
 
 
 
@@ -60,10 +62,10 @@ int main()
             displayDistanceTable( dist, cities,citycount);
             break;
         case 3:
-             showVehicleTypes();
+             displayVehicleTypes();
             break;
         case 4:
-            printf("not added yet");
+            handleDeliveryRequest(dist, cities, citycount, capacity);
             break;
         case 5:
             printf("not added yet");
@@ -320,9 +322,72 @@ void displayDistanceTable(int dist[][CITIES], char cities[][SIZE], int cityCount
         printf("    %s\n", cities[i]);
     }
 }
-void showVehicleTypes() {
+void displayVehicleTypes() {
     printf("\n--- Vehicle Types ---\n");
-    printf("0) Van   | Capacity: 1000 kg | Rate: 30 LKR/km | Speed: 60 km/h | Fuel: 12 km/l\n");
-    printf("1) Truck | Capacity: 5000 kg | Rate: 40 LKR/km | Speed: 50 km/h | Fuel: 6 km/l\n");
-    printf("2) Lorry | Capacity: 10000 kg | Rate: 80 LKR/km | Speed: 45 km/h | Fuel: 4 km/l\n");
+    printf("1) Van   | Capacity: 1000 kg | Rate: 30 LKR/km | Speed: 60 km/h | Fuel: 12 km/l\n");
+    printf("2) Truck | Capacity: 5000 kg | Rate: 40 LKR/km | Speed: 50 km/h | Fuel: 6 km/l\n");
+    printf("3) Lorry | Capacity: 10000 kg | Rate: 80 LKR/km | Speed: 45 km/h | Fuel: 4 km/l\n");
+}
+
+void handleDeliveryRequest(int dist[][CITIES], char cities[][SIZE], int cityCount,
+                           int capacity[]) {
+
+    if (cityCount < 2) {
+        printf("Need at least 2 cities to request delivery!\n");
+        return;
+    }
+
+    int start, end, type;
+    float weight;
+
+    displayCities(cities, cityCount);
+     displayVehicleTypes();
+
+    printf("Enter source city index: ");
+    scanf("%d", &start);
+
+    printf("Enter destination city index: ");
+    scanf("%d", &end);
+
+    if (start == end) {
+        printf("it cannot be same ");
+        return;
+    }
+
+    if (start< 0 ||start >= cityCount || end< 0 || end >= cityCount) {
+        printf("invalid\n");
+        return;
+    }
+
+    printf("Enter weight (kg): ");
+    scanf("%f", &weight);
+
+    printf("\nSelect Vehicle Type:\n");
+
+
+    printf("Enter vehicle type: ");
+    scanf("%d", &type);
+
+
+
+    if (type < 0 || type > vehicle) {
+        printf("enter a valid number\n");
+        return;
+    }
+
+    if (weight > capacity[type]) {
+        printf("Over vehicle capacity Max: %d kg\n", capacity[type]);
+        return;
+    }
+
+    if (dist[start][end] <= 0) {
+        printf(" Distance not set between these cities\n");
+        return;
+    }
+
+    printf("\nDelivery Request Accepted\n");
+    printf("Source: %s\n", cities[start]);
+    printf("Destination: %s\n", cities[end]);
+    printf("Weight: %.2f kg\n", weight);
+    printf("Vehicle: %d\n\n", type );
 }
