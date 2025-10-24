@@ -6,6 +6,9 @@
 #define SIZE 50
 void removeNewline(char *str);
 void addCity(char city[][SIZE], int *citycount);
+void displayCities(char city[][SIZE], int citycount);
+void renameCity(char city[][SIZE], int citycount);
+void removeCity(char city[][SIZE], int *citycount);
 void cityManagement(char city[][SIZE], int *citycount);
 
 
@@ -97,6 +100,71 @@ void addCity(char city[][SIZE], int *citycount) {
     printf("City added successfully!\n");
 }
 
+// to Display all cities
+void displayCities(char city[][SIZE], int citycount) {
+    if (citycount == 0) {
+        printf("No cities added yet.\n");
+        return;
+    }
+
+    printf("\nCities List:\n");
+    for (int i = 0; i < citycount; i++) {
+        printf("[%d] %s\n", i, city[i]);
+    }
+}
+
+// to Rename a city
+void renameCity(char city[][SIZE], int citycount) {
+    if (citycount == 0) {
+        printf("No cities available!\n");
+        return;
+    }
+
+    displayCities(city, citycount);
+
+    int index;
+    printf("Enter city index to rename: ");
+    scanf("%d", &index);
+    getchar();
+
+    if (index < 0 || index >= citycount) {
+        printf("Invalid index!\n");
+        return;
+    }
+
+    printf("Enter new name: ");
+    fgets(city[index], SIZE, stdin);
+    removeNewline(city[index]);
+
+    printf("City renamed!\n");
+}
+
+// to Remove a city
+void removeCity(char city[][SIZE], int *citycount) {
+    if (*citycount == 0) {
+        printf("No cities to remove!\n");
+        return;
+    }
+
+    displayCities(city, *citycount);
+
+    int index;
+    printf("Enter city index to remove: ");
+    scanf("%d", &index);
+    getchar();
+
+    if (index < 0 || index >= *citycount) {
+        printf("Invalid index!\n");
+        return;
+    }
+
+    for (int i = index; i < *citycount - 1; i++) {
+        strcpy(city[i], city[i + 1]);
+    }
+
+    (*citycount)--;
+    printf("City removed!\n");
+}
 
 
 
@@ -118,13 +186,13 @@ void cityManagement(char city[][SIZE], int *citycount) {
                 addCity(city, citycount);
                 break;
             case 2:
-                printf("not added yet");
+                 renameCity(city, *citycount);
                 break;
             case 3:
-                printf("not added yet");
+                removeCity(city,citycount);
                 break;
             case 4:
-                printf("not added yet");
+                displayCities(city, *citycount);
                 break;
             case 0:
                 return;
