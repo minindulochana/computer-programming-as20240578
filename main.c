@@ -4,6 +4,7 @@
 
 #define CITIES 30
 #define SIZE 50
+#define vehicle 3
 void removeNewline(char *str);
 void addCity(char city[][SIZE], int *citycount);
 void displayCities(char city[][SIZE], int citycount);
@@ -13,6 +14,7 @@ void cityManagement(char city[][SIZE], int *citycount);
 int distance(int dist[][CITIES], int cityCount, int a, int b, int km);
 void inputDistance(int dist[][CITIES], char cities[][SIZE], int cityCount);
 void displayDistanceTable(int dist[][CITIES], char cities[][SIZE], int cityCount);
+void showVehicleTypes();
 
 
 
@@ -20,7 +22,14 @@ int main()
 {
     char cities[CITIES][SIZE];
     int citycount = 0;
-    int dist[CITIES][CITIES]={0}; // its equal to zero because asaign garbage values
+    int dist[CITIES][CITIES]= {0}; // its equal to zero because asaign garbage values
+    char vehicleType[vehicle][SIZE] = { "Van", "Truck", "Lorry" };
+    int capacity[vehicle] = { 1000, 5000, 10000 };
+    int ratePerKm[vehicle] = { 30, 40, 80 };
+    int avgSpeed[vehicle] = { 60, 50, 45 };
+    int fuelEff[vehicle] = { 12, 6, 4 };
+
+
 
     int choice;
     while (choice !=10)
@@ -29,7 +38,7 @@ int main()
         printf("\n---- Logistics Management System ----\n");
         printf("1. City Management\n");
         printf("2. Distance Management\n");
-        printf("3. Vehicle Management\n");
+        printf("3. Display vehcles\n");
         printf("4. Delivery Request Handling\n");
         printf("5. Cost, Time, and Fuel Calculations\n");
         printf("6. Delivery Records\n");
@@ -51,7 +60,7 @@ int main()
             displayDistanceTable( dist, cities,citycount);
             break;
         case 3:
-            printf("not added yet");
+             showVehicleTypes();
             break;
         case 4:
             printf("not added yet");
@@ -224,16 +233,20 @@ void cityManagement(char city[][SIZE], int *citycount)
         }
     }
 }
-int distance(int dist[][CITIES], int cityCount, int a, int b, int km) {
-    if (a < 0 || a >= cityCount || b < 0 || b >= cityCount) {
+int distance(int dist[][CITIES], int cityCount, int a, int b, int km)
+{
+    if (a < 0 || a >= cityCount || b < 0 || b >= cityCount)
+    {
         printf("Invalid\n");
         return 0;
     }
-    if (a == b) {
+    if (a == b)
+    {
         printf("Distance = 0.\n");
         return 0;
     }
-    if (km < 0) {
+    if (km < 0)
+    {
         printf("Distance cannot be negative\n");
         return 0;
     }
@@ -243,9 +256,11 @@ int distance(int dist[][CITIES], int cityCount, int a, int b, int km) {
     return 1;
 }
 
-void inputDistance(int dist[][CITIES], char cities[][SIZE], int cityCount) {
+void inputDistance(int dist[][CITIES], char cities[][SIZE], int cityCount)
+{
 
-    if (cityCount < 2) {
+    if (cityCount < 2)
+    {
         printf("input two or more than two\n");
         return;
     }
@@ -262,7 +277,8 @@ void inputDistance(int dist[][CITIES], char cities[][SIZE], int cityCount) {
     scanf("%d", &b);
     getchar();
 
-    if (a == b) {
+    if (a == b)
+    {
         printf("distance = 0\n");
         return;
     }
@@ -276,10 +292,12 @@ void inputDistance(int dist[][CITIES], char cities[][SIZE], int cityCount) {
 }
 
 
-void displayDistanceTable(int dist[][CITIES], char cities[][SIZE], int cityCount) {
+void displayDistanceTable(int dist[][CITIES], char cities[][SIZE], int cityCount)
+{
 
-inputDistance(dist,cities,cityCount);
-    if (cityCount == 0) {
+    inputDistance(dist,cities,cityCount);
+    if (cityCount == 0)
+    {
         printf("No cities available!\n");
         return;
     }
@@ -292,7 +310,8 @@ inputDistance(dist,cities,cityCount);
 
     printf("\n");
 
-    for (int i = 0; i < cityCount; i++) {
+    for (int i = 0; i < cityCount; i++)
+    {
         printf("%3d |", i);
 
         for (int j = 0; j < cityCount; j++)
@@ -301,4 +320,9 @@ inputDistance(dist,cities,cityCount);
         printf("    %s\n", cities[i]);
     }
 }
-
+void showVehicleTypes() {
+    printf("\n--- Vehicle Types ---\n");
+    printf("0) Van   | Capacity: 1000 kg | Rate: 30 LKR/km | Speed: 60 km/h | Fuel: 12 km/l\n");
+    printf("1) Truck | Capacity: 5000 kg | Rate: 40 LKR/km | Speed: 50 km/h | Fuel: 6 km/l\n");
+    printf("2) Lorry | Capacity: 10000 kg | Rate: 80 LKR/km | Speed: 45 km/h | Fuel: 4 km/l\n");
+}
