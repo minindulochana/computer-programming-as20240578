@@ -10,15 +10,20 @@ void displayCities(char city[][SIZE], int citycount);
 void renameCity(char city[][SIZE], int citycount);
 void removeCity(char city[][SIZE], int *citycount);
 void cityManagement(char city[][SIZE], int *citycount);
+int distance(int dist[][CITIES], int cityCount, int a, int b, int km);
+void inputDistance(int dist[][CITIES], char cities[][SIZE], int cityCount);
 
 
 
-int main() {
+int main()
+{
     char cities[CITIES][SIZE];
-int citycount = 0;
+    int citycount = 0;
+    int dist[CITIES][CITIES];
 
- int choice;
-     while (choice !=10) {
+    int choice;
+    while (choice !=10)
+    {
 
         printf("\n---- Logistics Management System ----\n");
         printf("1. City Management\n");
@@ -32,42 +37,43 @@ int citycount = 0;
         printf("9. File Handling\n");
         printf("10. Exit\n");
         printf("Choose option: ");
-     scanf("%d",&choice);
+        scanf("%d",&choice);
 
 
 
-        switch (choice) {
-            case 1:
-                cityManagement(cities, &citycount);
-                break;
-                case 2:
-                printf("not added yet");
-                break;
-                case 3:
-                printf("not added yet");
-                break;
-                case 4:
-                printf("not added yet");
-                break;
-                case 5:
-                printf("not added yet");
-                break;
-                case 6:
-                printf("not added yet");
-                break;
-                case 7:
-                printf("not added yet");
-                break;
-                case 8:
-                printf("not added yet");
-                break;
-                case 9:
-                printf("not added yet");
-                break;
-                case 10:
-                printf("you exit the program\n");
-                break;
-                default:
+        switch (choice)
+        {
+        case 1:
+            cityManagement(cities, &citycount);
+            break;
+        case 2:
+            printf("not added yet");
+            break;
+        case 3:
+            printf("not added yet");
+            break;
+        case 4:
+            printf("not added yet");
+            break;
+        case 5:
+            printf("not added yet");
+            break;
+        case 6:
+            printf("not added yet");
+            break;
+        case 7:
+            printf("not added yet");
+            break;
+        case 8:
+            printf("not added yet");
+            break;
+        case 9:
+            printf("not added yet");
+            break;
+        case 10:
+            printf("you exit the program\n");
+            break;
+        default:
             printf("Invalid choice.\n");
 
 
@@ -79,15 +85,18 @@ int citycount = 0;
 
 
 
-void removeNewline(char *str) {
+void removeNewline(char *str)
+{
     int len = strlen(str);
     if (str[len - 1] == '\n')
         str[len - 1] = '\0';
 }
 
 // to add a new city
-void addCity(char city[][SIZE], int *citycount) {
-    if (*citycount >= CITIES) {
+void addCity(char city[][SIZE], int *citycount)
+{
+    if (*citycount >= CITIES)
+    {
         printf("City limit reached!\n");
         return;
     }
@@ -101,21 +110,26 @@ void addCity(char city[][SIZE], int *citycount) {
 }
 
 // to Display all cities
-void displayCities(char city[][SIZE], int citycount) {
-    if (citycount == 0) {
+void displayCities(char city[][SIZE], int citycount)
+{
+    if (citycount == 0)
+    {
         printf("No cities added yet.\n");
         return;
     }
 
     printf("\nCities List:\n");
-    for (int i = 0; i < citycount; i++) {
+    for (int i = 0; i < citycount; i++)
+    {
         printf("[%d] %s\n", i, city[i]);
     }
 }
 
 // to Rename a city
-void renameCity(char city[][SIZE], int citycount) {
-    if (citycount == 0) {
+void renameCity(char city[][SIZE], int citycount)
+{
+    if (citycount == 0)
+    {
         printf("No cities available!\n");
         return;
     }
@@ -127,7 +141,8 @@ void renameCity(char city[][SIZE], int citycount) {
     scanf("%d", &index);
     getchar();
 
-    if (index < 0 || index >= citycount) {
+    if (index < 0 || index >= citycount)
+    {
         printf("Invalid index!\n");
         return;
     }
@@ -140,8 +155,10 @@ void renameCity(char city[][SIZE], int citycount) {
 }
 
 // to Remove a city
-void removeCity(char city[][SIZE], int *citycount) {
-    if (*citycount == 0) {
+void removeCity(char city[][SIZE], int *citycount)
+{
+    if (*citycount == 0)
+    {
         printf("No cities to remove!\n");
         return;
     }
@@ -153,12 +170,14 @@ void removeCity(char city[][SIZE], int *citycount) {
     scanf("%d", &index);
     getchar();
 
-    if (index < 0 || index >= *citycount) {
+    if (index < 0 || index >= *citycount)
+    {
         printf("Invalid index!\n");
         return;
     }
 
-    for (int i = index; i < *citycount - 1; i++) {
+    for (int i = index; i < *citycount - 1; i++)
+    {
         strcpy(city[i], city[i + 1]);
     }
 
@@ -168,9 +187,11 @@ void removeCity(char city[][SIZE], int *citycount) {
 
 
 
-void cityManagement(char city[][SIZE], int *citycount) {
+void cityManagement(char city[][SIZE], int *citycount)
+{
     int choice_city;
-    while (1) {
+    while (1)
+    {
         printf("\n--- City Management ---\n");
         printf("1) Add City\n");
         printf("2) Rename City\n");
@@ -181,24 +202,75 @@ void cityManagement(char city[][SIZE], int *citycount) {
         scanf("%d", &choice_city);
         getchar();
 
-        switch (choice_city) {
-            case 1:
-                addCity(city, citycount);
-                break;
-            case 2:
-                 renameCity(city, *citycount);
-                break;
-            case 3:
-                removeCity(city,citycount);
-                break;
-            case 4:
-                displayCities(city, *citycount);
-                break;
-            case 0:
-                return;
-            default:
-                printf("Invalid choice!\n");
+        switch (choice_city)
+        {
+        case 1:
+            addCity(city, citycount);
+            break;
+        case 2:
+            renameCity(city, *citycount);
+            break;
+        case 3:
+            removeCity(city,citycount);
+            break;
+        case 4:
+            displayCities(city, *citycount);
+            break;
+        case 0:
+            return;
+        default:
+            printf("Invalid choice!\n");
         }
     }
+}
+int distance(int dist[][CITIES], int cityCount, int a, int b, int km) {
+    if (a < 0 || a >= cityCount || b < 0 || b >= cityCount) {
+        printf("Invalid\n");
+        return 0;
+    }
+    if (a == b) {
+        printf("Distance = 0.\n");
+        return 0;
+    }
+    if (km < 0) {
+        printf("Distance cannot be negative\n");
+        return 0;
+    }
+
+    dist[a][b] = km;
+    dist[b][a] = km;
+    return 1;
+}
+
+void inputDistance(int dist[][CITIES], char cities[][SIZE], int cityCount) {
+
+    if (cityCount < 2) {
+        printf("input two or more than two\n");
+        return;
+    }
+
+    int a, b, km;
+
+    displayCities(cities, cityCount);
+
+    printf("Enter first city index: ");
+    scanf("%d", &a);
+    getchar();
+
+    printf("Enter second city index: ");
+    scanf("%d", &b);
+    getchar();
+
+    if (a == b) {
+        printf("distance = 0\n");
+        return;
+    }
+
+    printf("Enter distance in km: ");
+    scanf("%d", &km);
+    getchar();
+
+    if (setDistance(dist, cityCount, a, b, km))
+        printf(" Distance updated successfully!\n");
 }
 
