@@ -12,6 +12,7 @@ void removeCity(char city[][SIZE], int *citycount);
 void cityManagement(char city[][SIZE], int *citycount);
 int distance(int dist[][CITIES], int cityCount, int a, int b, int km);
 void inputDistance(int dist[][CITIES], char cities[][SIZE], int cityCount);
+void displayDistanceTable(int dist[][CITIES], char cities[][SIZE], int cityCount);
 
 
 
@@ -19,7 +20,7 @@ int main()
 {
     char cities[CITIES][SIZE];
     int citycount = 0;
-    int dist[CITIES][CITIES];
+    int dist[CITIES][CITIES]={0}; // its equal to zero because asaign garbage values
 
     int choice;
     while (choice !=10)
@@ -47,7 +48,7 @@ int main()
             cityManagement(cities, &citycount);
             break;
         case 2:
-            printf("not added yet");
+            displayDistanceTable( dist, cities,citycount);
             break;
         case 3:
             printf("not added yet");
@@ -270,7 +271,34 @@ void inputDistance(int dist[][CITIES], char cities[][SIZE], int cityCount) {
     scanf("%d", &km);
     getchar();
 
-    if (setDistance(dist, cityCount, a, b, km))
+    if (distance(dist, cityCount, a, b, km))
         printf(" Distance updated successfully!\n");
+}
+
+
+void displayDistanceTable(int dist[][CITIES], char cities[][SIZE], int cityCount) {
+
+inputDistance(dist,cities,cityCount);
+    if (cityCount == 0) {
+        printf("No cities available!\n");
+        return;
+    }
+
+    printf("\nDistance Table (km)\n     ");
+
+
+    for (int j = 0; j < cityCount; j++)
+        printf("%6d", j);
+
+    printf("\n");
+
+    for (int i = 0; i < cityCount; i++) {
+        printf("%3d |", i);
+
+        for (int j = 0; j < cityCount; j++)
+            printf("%6d", dist[i][j]);
+
+        printf("    %s\n", cities[i]);
+    }
 }
 
