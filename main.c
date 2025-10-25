@@ -21,12 +21,11 @@ void handleDeliveryRequest(int dist[][CITIES], char cities[][SIZE], int cityCoun
 void calculateDeliveryCost(int dist[][CITIES], char cities[][SIZE], int cityCount,
                            int capacity[], int ratePerKm[], int avgSpeed[],
                            int fuelEff[], float fuelPrice);
-                           void storeDeliveryRecord(int dist[][CITIES], char cities[][SIZE], int citycount,
+void storeDeliveryRecord(int dist[][CITIES], char cities[][SIZE], int citycount,
                          int deliveryStart[], int deliveryEnd[],
                          float deliveryWeight[], int deliveryVehicle[],
                          int *deliveryCount,
                          int capacity[]);
-
 
 
 int main()
@@ -41,10 +40,10 @@ int main()
     int fuelEff[vehicle] = { 12, 6, 4 };
     float fuelprice=310.0;
     int deliveryStart[maxdelivery ];
-int deliveryEnd[maxdelivery ];
-float deliveryWeight[maxdelivery ];
-int deliveryVehicle[maxdelivery ];
-int deliveryCount = 0;
+    int deliveryEnd[maxdelivery ];
+    float deliveryWeight[maxdelivery ];
+    int deliveryVehicle[maxdelivery ];
+    int deliveryCount = 0;
 
 
 
@@ -92,10 +91,10 @@ int deliveryCount = 0;
             break;
         case 6:
             storeDeliveryRecord(dist, cities, citycount,
-                        deliveryStart, deliveryEnd,
-                        deliveryWeight, deliveryVehicle,
-                        &deliveryCount,
-                        capacity);
+                                deliveryStart, deliveryEnd,
+                                deliveryWeight, deliveryVehicle,
+                                &deliveryCount,
+                                capacity);
             break;
         case 7:
             printf("not added yet");
@@ -297,11 +296,11 @@ void inputDistance(int dist[][CITIES], char cities[][SIZE], int cityCount)
 
     printf("Enter first city index: ");
     scanf("%d", &a);
-    getchar();
+
 
     printf("Enter second city index: ");
     scanf("%d", &b);
-    getchar();
+
 
     if (a == b)
     {
@@ -396,7 +395,7 @@ void handleDeliveryRequest(int dist[][CITIES], char cities[][SIZE], int cityCoun
 
     printf("Enter vehicle type: ");
     scanf("%d", &type);
-
+    type--;
 
 
     if (type < 0 || type > vehicle)
@@ -421,7 +420,7 @@ void handleDeliveryRequest(int dist[][CITIES], char cities[][SIZE], int cityCoun
     printf("Source: %s\n", cities[start]);
     printf("Destination: %s\n", cities[end]);
     printf("Weight: %.2f kg\n", weight);
-    printf("Vehicle: %d\n\n", type );
+    printf("Vehicle: %d\n\n", type+1);
 }
 
 
@@ -471,6 +470,7 @@ void calculateDeliveryCost(int dist[][CITIES], char cities[][SIZE], int cityCoun
     displayVehicleTypes();
     printf("Enter vehicle type: ");
     scanf("%d", &type);
+    type--;
 
 
     if (type < 0 || type > vehicle)
@@ -518,14 +518,17 @@ void storeDeliveryRecord(int dist[][CITIES], char cities[][SIZE], int citycount,
                          int deliveryStart[], int deliveryEnd[],
                          float deliveryWeight[], int deliveryVehicle[],
                          int *deliveryCount,
-                         int capacity[]) {
+                         int capacity[])
+{
 
-    if (*deliveryCount >= maxdelivery) {
+    if (*deliveryCount >= maxdelivery)
+    {
         printf("Record limit reached\n");
         return;
     }
 
-    if (citycount < 2) {
+    if (citycount < 2)
+    {
         printf(" enter two or more than two cities\n");
         return;
     }
@@ -543,17 +546,20 @@ void storeDeliveryRecord(int dist[][CITIES], char cities[][SIZE], int citycount,
     scanf("%d", &end);
 
 
-    if (start == end) {
+    if (start == end)
+    {
         printf(" Start and End cannot be same\n");
         return;
     }
 
-    if (start < 0 || start >= citycount || end < 0 || end>= citycount) {
+    if (start < 0 || start >= citycount || end < 0 || end>= citycount)
+    {
         printf(" Invalid city index\n");
         return;
     }
 
-    if (dist[start][end] <= 0) {
+    if (dist[start][end] <= 0)
+    {
         printf(" set the distance first\n");
         return;
     }
@@ -561,22 +567,25 @@ void storeDeliveryRecord(int dist[][CITIES], char cities[][SIZE], int citycount,
     printf("Enter weight (kg): ");
     scanf("%f", &weight);
 
-displayVehicleTypes();
+    displayVehicleTypes();
     printf("\nSelect Vehicle Type:\n");
 
 
 
     printf("Enter vehicle type: ");
     scanf("%d", &type);
+    type--;
 
 
 
-    if (type < 0 || type > vehicle) {
+    if (type < 0 || type >= vehicle)
+    {
         printf(" Invalid vehicle type\n");
         return;
     }
 
-    if (weight > capacity[type]) {
+    if (weight > capacity[type])
+    {
         printf(" Weight exceeds capacity (%d kg)\n", capacity[type]);
         return;
     }
