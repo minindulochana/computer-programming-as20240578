@@ -26,7 +26,9 @@ void storeDeliveryRecord(int dist[][CITIES], char cities[][SIZE], int citycount,
                          float deliveryWeight[], int deliveryVehicle[],
                          int *deliveryCount,
                          int capacity[]);
-
+void findLeastCostRoute(int dist[][CITIES], char cities[][SIZE], int citycount,
+                        int capacity[], int ratePerKm[], int avgSpeed[],
+                        int fuelEff[], float fuelPrice);
 
 int main()
 {
@@ -44,6 +46,7 @@ int main()
     float deliveryWeight[maxdelivery ];
     int deliveryVehicle[maxdelivery ];
     int deliveryCount = 0;
+
 
 
 
@@ -97,7 +100,9 @@ int main()
                                 capacity);
             break;
         case 7:
-            printf("not added yet");
+            findLeastCostRoute(dist, cities, citycount,
+                               capacity, ratePerKm, avgSpeed,
+                               fuelEff, fuelprice);
             break;
         case 8:
             printf("not added yet");
@@ -600,5 +605,132 @@ void storeDeliveryRecord(int dist[][CITIES], char cities[][SIZE], int citycount,
     printf(" Delivery Recorded \n");
     printf("Record No: %d\n\n", *deliveryCount);
 }
+
+void findLeastCostRoute(int dist[][CITIES], char cities[][SIZE], int citycount,
+                        int capacity[], int ratePerKm[], int avgSpeed[],
+                        int fuelEff[], float fuelPrice)
+{
+
+    if (citycount < 2)
+    {
+        printf("enter two or more than two cities\n");
+        return;
+    }
+
+    int start, end, type;
+    float weight;
+
+    displayCities(cities, citycount);
+
+    printf("Enter START city index: ");
+    scanf("%d", &start);
+    printf("Enter END city index: ");
+    scanf("%d", &end);
+
+    if (start == end)
+    {
+        printf("Start and End cannot be same\n");
+        return;
+    }
+    if (dist[start][end] <= 0)
+    {
+        printf("No direct route\n");
+    }
+
+    printf("Enter Weight (kg): ");
+    scanf("%f", &weight);
+    displayVehicleTypes();
+    printf("Select Vehicle:  ");
+    scanf("%d", &type);
+    type--;
+
+    if (weight > capacity[type])
+    {
+        printf(" Over capacity (%d kg)\n", capacity[type]);
+        return;
+    }
+
+    float bestDist = 9999;
+    int bestPath[4], pathCount = 0;
+
+
+    for (int i = 0; i < citycount; i++)
+    {
+        for (int j = 0; j < citycount; j++)
+        {
+            if (i == start || j == start|| i == j) continue;
+            if (i == end || j == end) continue;
+            if (dist[start][i] > 0 && dist[i][j] > 0 && dist[j][end] > 0)
+            {
+                float d = dist[start][i] + dist[i][j] + dist[j][end];
+                if (d < bestDist)
+                {
+                    bestDist = d;
+                    bestPath[0] = start;
+                    bestPath[1] = i;
+                    bestPath[2] = j;
+                    bestPath[3] = end;
+                    pathCount = 4;
+                }
+            }
+        }
+    }
+
+    //if its haven't intermediate path use direct path
+    if (bestDist == 99999 && dist[start][end] > 0)
+    {
+        bestDist = dist[start][end];
+        bestPath[0] = start;
+        bestPath[1] = end;
+        pathCount = 2;
+    }
+
+    if (bestDist == 99999)
+    {
+        printf(" No route found!\n");
+        return;
+    }
+
+    float D = bestDist;
+    float W = weight;
+    float R = ratePerKm[type];
+    float S = avgSpeed[type];
+    float E = fuelEff[type];
+
+    float Cost = D * R * (1 + W / 10000.0f);
+    float Fuel = D / E;
+    float FuelCost = Fuel * fuelPrice;
+    float TotalCost = Cost + FuelCost;
+    float Profit = Cost * 0.25;
+    float CustomerCharge = TotalCost + Profit;
+    float Time = D / S;
+
+
+    printf("DELIVERY COST ESTIMATION\n");
+    printf("------------------------------------------------------\n");
+    printf("From: %s\n", cities[start]);
+    printf("To: %s\n", cities[end]);
+    printf("Minimum Distance: %.2f km\n", D);
+    printf("Vehicle: %d\n", type + 1);
+    printf("Weight: %.2f kg\n", W);
+    printf("------------------------------------------------------\n");
+    printf("Base Cost: %.2f LKR\n", Cost);
+    printf("Fuel Used: %.2f L\n", Fuel);
+    printf("Fuel Cost: %.2f LKR\n", FuelCost);
+    printf("Operational Cost: %.2f LKR\n", TotalCost);
+    printf("Profit: %.2f LKR\n", Profit);
+    printf("Customer Charge: %.2f LKR\n", CustomerCharge);
+    printf("Estimated Time: %.2f hours\n", Time);
+    printf("======================================================\n");
+
+    printf("\nBest Route: ");
+    for (int k = 0; k < pathCount; k++)
+    {
+        printf("%s", cities[bestPath[k]]);
+        if (k < pathCount - 1) printf(" - ");
+    }
+    printf("\n\n");
+}
+
 
 
