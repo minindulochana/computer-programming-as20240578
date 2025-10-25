@@ -30,11 +30,17 @@ void findLeastCostRoute(int dist[][CITIES], char cities[][SIZE], int citycount,
                         int capacity[], int ratePerKm[], int avgSpeed[],
                         int fuelEff[], float fuelPrice);
 
-                        void showReports(int deliveryCount, int deliveryStart[], int deliveryEnd[],
+void showReports(int deliveryCount, int deliveryStart[], int deliveryEnd[],
                  float deliveryWeight[], int deliveryVehicle[],
                  int dist[][CITIES], int capacity[], int ratePerKm[],
                  int avgSpeed[], int fuelEff[], float fuelprice,
                  char cities[][SIZE]);
+void loadSaveData(int mode,
+                  char cities[][SIZE], int *cityCount,
+                  int dist[][CITIES],
+                  int deliveryStart[], int deliveryEnd[],
+                  float deliveryWeight[], int deliveryVehicle[],
+                  int *deliverycount);
 int main()
 {
     char cities[CITIES][SIZE];
@@ -51,6 +57,8 @@ int main()
     float deliveryWeight[maxdelivery ];
     int deliveryVehicle[maxdelivery ];
     int deliveryCount = 0;
+    int mode=1;// if you want to save data mode =1,if you want to load data mode = 0
+
 
 
 
@@ -111,13 +119,16 @@ int main()
             break;
         case 8:
             showReports(deliveryCount, deliveryStart, deliveryEnd,
-                deliveryWeight, deliveryVehicle,
-                dist, capacity, ratePerKm,
-                avgSpeed, fuelEff, fuelprice,
-                cities);
+                        deliveryWeight, deliveryVehicle,
+                        dist, capacity, ratePerKm,
+                        avgSpeed, fuelEff, fuelprice,
+                        cities);
             break;
         case 9:
-            printf("not added yet");
+            loadSaveData(mode, cities, &citycount, dist,
+                         deliveryStart, deliveryEnd,
+                         deliveryWeight, deliveryVehicle,
+                         &deliveryCount);
             break;
         case 10:
             printf("you exit the program\n");
@@ -745,9 +756,11 @@ void showReports(int deliveryCount, int deliveryStart[], int deliveryEnd[],
                  float deliveryWeight[], int deliveryVehicle[],
                  int dist[][CITIES], int capacity[], int ratePerKm[],
                  int avgSpeed[], int fuelEff[], float fuelprice,
-                 char cities[][SIZE]) {
+                 char cities[][SIZE])
+{
 
-    if (deliveryCount == 0) {
+    if (deliveryCount == 0)
+    {
         printf("Not completed yet\n");
         return;
     }
@@ -756,7 +769,8 @@ void showReports(int deliveryCount, int deliveryStart[], int deliveryEnd[],
     float longestDist = 0, shortestDist = 99999;
     int longIndex = 0, shortIndex = 0;
 
-    for (int i = 0; i < deliveryCount; i++) {
+    for (int i = 0; i < deliveryCount; i++)
+    {
 
         int start = deliveryStart[i];
         int end = deliveryEnd[i];
@@ -784,11 +798,13 @@ void showReports(int deliveryCount, int deliveryStart[], int deliveryEnd[],
         totalProfit += Profit;
 
         //route check
-        if (D > longestDist) {
+        if (D > longestDist)
+        {
             longestDist = D;
             longIndex = i;
         }
-        if (D < shortestDist) {
+        if (D < shortestDist)
+        {
             shortestDist = D;
             shortIndex = i;
         }
@@ -814,5 +830,82 @@ void showReports(int deliveryCount, int deliveryStart[], int deliveryEnd[],
            cities[deliveryEnd[shortIndex]]);
 
 }
+
+void loadSaveData(int mode,
+                  char cities[][SIZE], int *citycount,
+                  int dist[][CITIES],
+                  int deliveryStart[], int deliveryEnd[],
+                  float deliveryWeight[], int deliveryVehicle[],
+                  int *deliveryCount)
+{
+    FILE *f1;  // declare inside function
+    FILE *f2;  // declare inside function
+
+    if (mode == 0)   // load data
+    {
+
+        f1 = fopen("routes.txt", "r");
+        if (f1 != NULL)
+        {
+            fscanf(f1, "%d\n", citycount);
+
+            for (int i = 0; i < *citycount; i++)
+                fscanf(f1, "%s", cities[i]);
+
+            for (int i = 0; i < *citycount; i++)
+                for (int j = 0; j < *citycount; j++)
+                    fscanf(f1, "%d", &dist[i][j]);
+
+            fclose(f1);
+            printf("Routes Loaded\n");
+        }
+
+        f2 = fopen("deliveries.txt", "r");
+        if (f2 != NULL)
+        {
+            fscanf(f2, "%d\n", deliveryCount);
+
+            for (int i = 0; i < *deliveryCount; i++)
+                fscanf(f2, "%d %d %f %d",
+                       &deliveryStart[i], &deliveryEnd[i],
+                       &deliveryWeight[i], &deliveryVehicle[i]);
+
+            fclose(f2);
+            printf("Deliveries Loaded\n");
+        }
+    }
+
+    else if (mode == 1)   // save data
+    {
+
+        f1 = fopen("routes.txt", "w");
+        fprintf(f1, "%d\n", *citycount);
+
+        for (int i = 0; i < *citycount; i++)
+            fprintf(f1, "%s\n", cities[i]);
+
+        for (int i = 0; i < *citycount; i++)
+        {
+            for (int j = 0; j < *citycount; j++)
+                fprintf(f1, "%d ", dist[i][j]);
+            fprintf(f1, "\n");
+        }
+
+        fclose(f1);
+        printf("Routes Saved\n");
+
+        f2 = fopen("deliveries.txt", "w");//use txt file
+        fprintf(f2, "%d\n", *deliveryCount);
+
+        for (int i = 0; i < *deliveryCount; i++)
+            fprintf(f2, "%d %d %.2f %d\n",
+                    deliveryStart[i], deliveryEnd[i],
+                    deliveryWeight[i], deliveryVehicle[i]);
+
+        fclose(f2);
+        printf("Deliveries Saved\n");
+    }
+}
+
 
 
