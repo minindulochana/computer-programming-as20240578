@@ -30,6 +30,11 @@ void findLeastCostRoute(int dist[][CITIES], char cities[][SIZE], int citycount,
                         int capacity[], int ratePerKm[], int avgSpeed[],
                         int fuelEff[], float fuelPrice);
 
+                        void showReports(int deliveryCount, int deliveryStart[], int deliveryEnd[],
+                 float deliveryWeight[], int deliveryVehicle[],
+                 int dist[][CITIES], int capacity[], int ratePerKm[],
+                 int avgSpeed[], int fuelEff[], float fuelprice,
+                 char cities[][SIZE]);
 int main()
 {
     char cities[CITIES][SIZE];
@@ -105,7 +110,11 @@ int main()
                                fuelEff, fuelprice);
             break;
         case 8:
-            printf("not added yet");
+            showReports(deliveryCount, deliveryStart, deliveryEnd,
+                deliveryWeight, deliveryVehicle,
+                dist, capacity, ratePerKm,
+                avgSpeed, fuelEff, fuelprice,
+                cities);
             break;
         case 9:
             printf("not added yet");
@@ -732,5 +741,78 @@ void findLeastCostRoute(int dist[][CITIES], char cities[][SIZE], int citycount,
     printf("\n\n");
 }
 
+void showReports(int deliveryCount, int deliveryStart[], int deliveryEnd[],
+                 float deliveryWeight[], int deliveryVehicle[],
+                 int dist[][CITIES], int capacity[], int ratePerKm[],
+                 int avgSpeed[], int fuelEff[], float fuelprice,
+                 char cities[][SIZE]) {
+
+    if (deliveryCount == 0) {
+        printf("Not completed yet\n");
+        return;
+    }
+
+    float totalDist = 0, totalTime = 0, totalRevenue = 0, totalProfit = 0;
+    float longestDist = 0, shortestDist = 99999;
+    int longIndex = 0, shortIndex = 0;
+
+    for (int i = 0; i < deliveryCount; i++) {
+
+        int start = deliveryStart[i];
+        int end = deliveryEnd[i];
+        int type = deliveryVehicle[i];
+        float W = deliveryWeight[i];
+        float D = dist[start][end];
+
+        // Cost Calculations
+        float R = ratePerKm[type];
+        float S = avgSpeed[type];
+        float E = fuelEff[type];
+
+        float Cost = D * R * (1 + W / 10000.0f);
+        float Time = D / S;
+        float Fuel = D / E;
+        float FuelCost = Fuel * fuelprice;
+        float TotalCost = Cost + FuelCost;
+        float Profit = Cost * 0.25f;
+        float Charge = TotalCost + Profit;
+
+
+        totalDist += D;
+        totalTime += Time;
+        totalRevenue += Charge;
+        totalProfit += Profit;
+
+        //route check
+        if (D > longestDist) {
+            longestDist = D;
+            longIndex = i;
+        }
+        if (D < shortestDist) {
+            shortestDist = D;
+            shortIndex = i;
+        }
+    }
+
+    float avgTime = totalTime / deliveryCount;
+
+    printf("\n-----------PERFORMANCE REPORTS--------------\n");
+    printf("Total Deliveries Completed: %d\n", deliveryCount);
+    printf("Total Distance Covered: %.2f km\n", totalDist);
+    printf("Average Delivery Time: %.2f hours\n", avgTime);
+    printf("Total Revenue: %.2f LKR\n", totalRevenue);
+    printf("Total Profit: %.2f LKR\n", totalProfit);
+
+    printf("\nLongest Route: %.2f km (%s - %s)\n",
+           longestDist,
+           cities[deliveryStart[longIndex]],
+           cities[deliveryEnd[longIndex]]);
+
+    printf("Shortest Route: %.2f km (%s - %s)\n",
+           shortestDist,
+           cities[deliveryStart[shortIndex]],
+           cities[deliveryEnd[shortIndex]]);
+
+}
 
 
