@@ -5,6 +5,7 @@
 #define CITIES 30
 #define SIZE 50
 #define vehicle 3
+#define maxdelivery 50
 void removeNewline(char *str);
 void addCity(char city[][SIZE], int *citycount);
 void displayCities(char city[][SIZE], int citycount);
@@ -20,6 +21,11 @@ void handleDeliveryRequest(int dist[][CITIES], char cities[][SIZE], int cityCoun
 void calculateDeliveryCost(int dist[][CITIES], char cities[][SIZE], int cityCount,
                            int capacity[], int ratePerKm[], int avgSpeed[],
                            int fuelEff[], float fuelPrice);
+                           void storeDeliveryRecord(int dist[][CITIES], char cities[][SIZE], int citycount,
+                         int deliveryStart[], int deliveryEnd[],
+                         float deliveryWeight[], int deliveryVehicle[],
+                         int *deliveryCount,
+                         int capacity[]);
 
 
 
@@ -34,6 +40,11 @@ int main()
     int avgSpeed[vehicle] = { 60, 50, 45 };
     int fuelEff[vehicle] = { 12, 6, 4 };
     float fuelprice=310.0;
+    int deliveryStart[maxdelivery ];
+int deliveryEnd[maxdelivery ];
+float deliveryWeight[maxdelivery ];
+int deliveryVehicle[maxdelivery ];
+int deliveryCount = 0;
 
 
 
@@ -80,7 +91,11 @@ int main()
 
             break;
         case 6:
-            printf("not added yet");
+            storeDeliveryRecord(dist, cities, citycount,
+                        deliveryStart, deliveryEnd,
+                        deliveryWeight, deliveryVehicle,
+                        &deliveryCount,
+                        capacity);
             break;
         case 7:
             printf("not added yet");
@@ -496,4 +511,85 @@ void calculateDeliveryCost(int dist[][CITIES], char cities[][SIZE], int cityCoun
     printf("Profit (25%%): %.2f LKR\n", Profit);
     printf(" Final Customer Charge: %.2f LKR\n", CustomerCharge);
 }
+
+
+
+void storeDeliveryRecord(int dist[][CITIES], char cities[][SIZE], int citycount,
+                         int deliveryStart[], int deliveryEnd[],
+                         float deliveryWeight[], int deliveryVehicle[],
+                         int *deliveryCount,
+                         int capacity[]) {
+
+    if (*deliveryCount >= maxdelivery) {
+        printf("Record limit reached\n");
+        return;
+    }
+
+    if (citycount < 2) {
+        printf(" enter two or more than two cities\n");
+        return;
+    }
+
+    int start, end, type;
+    float weight;
+
+    displayCities(cities, citycount);
+
+    printf("Enter start city index: ");
+    scanf("%d", &start);
+
+
+    printf("Enter End city index: ");
+    scanf("%d", &end);
+
+
+    if (start == end) {
+        printf(" Start and End cannot be same\n");
+        return;
+    }
+
+    if (start < 0 || start >= citycount || end < 0 || end>= citycount) {
+        printf(" Invalid city index\n");
+        return;
+    }
+
+    if (dist[start][end] <= 0) {
+        printf(" set the distance first\n");
+        return;
+    }
+
+    printf("Enter weight (kg): ");
+    scanf("%f", &weight);
+
+displayVehicleTypes();
+    printf("\nSelect Vehicle Type:\n");
+
+
+
+    printf("Enter vehicle type: ");
+    scanf("%d", &type);
+
+
+
+    if (type < 0 || type > vehicle) {
+        printf(" Invalid vehicle type\n");
+        return;
+    }
+
+    if (weight > capacity[type]) {
+        printf(" Weight exceeds capacity (%d kg)\n", capacity[type]);
+        return;
+    }
+
+    deliveryStart[*deliveryCount]  = start;
+    deliveryEnd[*deliveryCount]    = end;
+    deliveryWeight[*deliveryCount] = weight;
+    deliveryVehicle[*deliveryCount] = type;
+
+    (*deliveryCount)++;
+
+    printf(" Delivery Recorded \n");
+    printf("Record No: %d\n\n", *deliveryCount);
+}
+
 
