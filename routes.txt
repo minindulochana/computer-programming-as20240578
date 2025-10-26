@@ -1,5 +1,9 @@
-2
+4
 colombo
 maharagama
-0 34 
-34 0 
+kollupitiya
+rathnapura
+0 19 25 67 
+19 0 12 78 
+25 12 0 89 
+67 78 89 0 
